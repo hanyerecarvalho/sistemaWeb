@@ -82,7 +82,7 @@ SistemaWeb/
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/hanyerecarvalho/sistemaWeb.git
 
 # Coloque o projeto no servidor local
 # Exemplo: XAMPP/htdocs
