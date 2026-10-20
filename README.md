@@ -1,98 +1,74 @@
-# Sistema Web de Cálculos
+# Sistema Web de Cálculos 💻
 
-Sistema web desenvolvido em PHP, HTML e CSS para realização de cálculos e gerenciamento de informações, com interface simples e responsiva.
+Projeto acadêmico em **PHP, Slim Framework 4, HTML, CSS e Bootstrap**, com quatro ferramentas para praticar formulários, rotas HTTP e programação orientada a objetos.
 
-# 💻 Sistema Web de Cálculos
+## Funcionalidades
 
-Aplicação web desenvolvida utilizando PHP, HTML e CSS, com funcionalidades voltadas para cálculos do dia a dia e controle de informações.
+| Ferramenta | Descrição |
+| --- | --- |
+| IMC | Cálculo do índice de massa corporal a partir dos dados do formulário. |
+| Notas | Média de duas notas e classificação em aprovado, recuperação ou reprovado. |
+| Estoque | Cálculo de saldo e valor de produtos a partir de entradas e saídas. |
+| Salário | Soma da remuneração de horas trabalhadas e horas extras. |
 
-## 📋 Sobre o Projeto
+Os cálculos de estoque são feitos na requisição; o projeto não configura persistência em banco de dados.
 
-Sistema desenvolvido como projeto acadêmico com o objetivo de aplicar conceitos de desenvolvimento web utilizando PHP no backend e HTML/CSS no frontend.
+## Requisitos e instalação
 
-A aplicação possui quatro funcionalidades principais:
-
-- **Cálculo de IMC** — realiza o cálculo do Índice de Massa Corporal com base no peso e altura informados.
-- **Cálculo de Notas** — calcula médias e auxilia no acompanhamento do desempenho acadêmico.
-- **Controle de Estoque** — realiza cálculos relacionados ao gerenciamento de produtos e quantidades.
-- **Cálculo de Salário** — permite realizar cálculos salariais conforme os valores informados.
-
-## 🛠️ Tecnologias
-
-- PHP 8+
-- HTML5
-- CSS3
-- Bootstrap
-- XAMPP
-
-## ⚙️ Funcionalidades
-
-### 🏃 IMC
-- Entrada de peso e altura
-- Cálculo automático do IMC
-- Classificação do resultado
-
-### 📚 Notas
-- Inserção de notas
-- Cálculo de média final
-- Exibição do resultado
-
-### 📦 Estoque
-- Cadastro e controle de informações de produtos
-- Cálculos de quantidade e valores
-
-### 💰 Salário
-- Cálculo baseado nos valores informados
-- Exibição dos resultados financeiros
-
-## 📁 Estrutura de Pastas
-
-```
-SistemaWeb/
-├── public/
-│   ├── funcionario
-│       ├── funcionario.html
-│       └── index.php
-│   ├── imc
-│       ├── IMC.html
-│       ├── IMC.png
-│       └── index.php
-│   ├── nota
-│       ├── nota.html
-│       └── index.php
-│   └── produto
-│       ├── produto.html
-│       └── index.php
-├── src/
-│   ├── funcionario
-│       └── funcionario.php
-│   ├── imc
-│       └── imc.php
-│   ├── nota
-│       └── nota.php
-│   └── produto
-│       └── produto.php
-├── vendor/
-├── composer.json
-├── composer.lock
-└── README.md
-```
-
-## 🚀 Instalação
+PHP 8.0 ou superior, Composer e acesso à internet para carregar o Bootstrap por CDN.
 
 ```bash
-# Clone o repositório
 git clone https://github.com/hanyerecarvalho/sistemaWeb.git
-
-# Coloque o projeto no servidor local
-# Exemplo: XAMPP/htdocs
-
-# Inicie o Apache pelo XAMPP
-
-# Acesse no navegador
-http://localhost/SistemaWeb
+cd sistemaWeb
+composer install
 ```
 
-## 👨‍💻 Autor
+## Executar localmente
 
-Desenvolvido por **Hanyere**
+Cada ferramenta possui seu próprio ponto de entrada Slim. Para usar as quatro pelo mesmo servidor de desenvolvimento, crie um arquivo local `router.local.php` na raiz com o conteúdo abaixo. Esse arquivo auxiliar não acompanha o repositório:
+
+```php
+<?php
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+if ($path === '/' || is_file(__DIR__ . '/public' . $path)) {
+    return false;
+}
+$routes = [
+    '/imc' => '/imc/index.php',
+    '/nota' => '/nota/index.php',
+    '/produtos' => '/produto/index.php',
+    '/funcionario' => '/funcionario/index.php',
+];
+if (isset($routes[$path])) {
+    require __DIR__ . '/public' . $routes[$path];
+    return;
+}
+http_response_code(404);
+echo 'Página não encontrada';
+```
+
+Inicie o servidor e abra `http://localhost:8000` para acessar o menu:
+
+```bash
+php -S localhost:8000 -t public router.local.php
+```
+
+O roteador auxiliar preserva as páginas estáticas e encaminha os formulários para cada módulo, incluindo `/produtos`, que não corresponde ao nome da pasta `produto`. Encerre o servidor com `Ctrl+C`.
+
+## Estrutura
+
+```text
+public/index.html   Menu das ferramentas
+public/imc/         Formulário e rota POST /imc
+public/nota/        Formulário e rota POST /nota
+public/produto/     Formulário e rota POST /produtos
+public/funcionario/ Formulário e rota POST /funcionario
+src/               Classes e regras de cálculo
+composer.json      Dependências e autoload
+```
+
+O arquivo `src/funcionario/funcionario.php` usa capitalização diferente da classe `Funcionario`; ambientes sensíveis a maiúsculas e minúsculas podem exigir ajuste no nome do arquivo para o autoload.
+
+## Autor
+
+[Hanyere Carvalho](https://github.com/hanyerecarvalho)
